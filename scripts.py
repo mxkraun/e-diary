@@ -33,7 +33,8 @@ def create_commendation(schoolkid, subject_title):
         group_letter=group_letter, year_of_study=year_of_study,
         subject__title=subject_title, date=lesson_date
         ).order_by('date')
-    if len(lessons) > 1:
+    lesson_count = lessons.count()
+    if lesson_count > 1:
         print(f'Все уроки {date_input} по предмету {subject_title}:')
         for i, lesson in enumerate(lessons, 1):
             lesson_time = lesson.TIMESLOTS_SCHEDULE[lesson.timeslot - 1]
@@ -45,7 +46,7 @@ def create_commendation(schoolkid, subject_title):
                 break
             except:
                 print('Неверный номер урока. Попробуйте еще раз.')
-    elif len(lessons) == 1:
+    elif lesson_count == 1:
         lesson = lessons[0]
     else: 
         raise Lesson.DoesNotExist('Lesson matching query does not exist.')
