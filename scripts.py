@@ -10,6 +10,11 @@ COMMENDATION_PHRASES = (
         )
 
 
+class EmptyQuerySet(Exception):
+    def __str__(self):
+        return f'QuerySet is empty.'
+
+
 def fix_marks(schoolkid):
     Mark.objects.filter(schoolkid=schoolkid, points__in=[2,3]).update(points=5)
 
@@ -33,8 +38,8 @@ def create_commendation(schoolkid, subject_title):
         group_letter=group_letter, year_of_study=year_of_study,
         subject__title=subject_title, date=lesson_date
         ).order_by('date')
-    lesson_count = lessons.count()
-    if lesson_count > 1:
+    lessons_count = lessons.count()
+    if lessons_count > 1:
         print(f'Все уроки {date_input} по предмету {subject_title}:')
         for i, lesson in enumerate(lessons, 1):
             lesson_time = lesson.TIMESLOTS_SCHEDULE[lesson.timeslot - 1]
@@ -46,10 +51,10 @@ def create_commendation(schoolkid, subject_title):
                 break
             except:
                 print('Неверный номер урока. Попробуйте еще раз.')
-    elif lesson_count == 1:
+    elif lessons_count == 1:
         lesson = lessons[0]
     else: 
-        raise Lesson.DoesNotExist('Lesson matching query does not exist.')
+        raise EmptyQuerySet
     Commendation.objects.create(
         text=random.choice(COMMENDATION_PHRASES), created=lesson.date,schoolkid=schoolkid,
         subject=lesson.subject, teacher=lesson.teacher
@@ -81,7 +86,7 @@ while True:
         create_commendation(schoolkid, subject_title)
         print('Похвала создана.')
         break
-    except:
+    except EmptyQuerySet:
         print('Не найдено нужных уроков. Попробуйте еще раз.')
 
 print('Все готово!')
