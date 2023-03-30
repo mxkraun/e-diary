@@ -61,32 +61,38 @@ def create_commendation(schoolkid, subject_title):
         )
 
 
-while True:
-    try:
-        schoolkid_name = input('Введите ФИО ученика: ')
-        schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
-        print('Ученик найден.')
-        break
-    except Schoolkid.MultipleObjectsReturned:
-        print('Найдено несколько таких учеников. Уточните ФИО.')
-    except Schoolkid.DoesNotExist:
-        print('Такой ученик не найден. Попробуйте еще раз.')
+def main():
+    while True:
+        try:
+            schoolkid_name = input('Введите ФИО ученика: ')
+            schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
+            print('Ученик найден.')
+            break
+        except Schoolkid.MultipleObjectsReturned:
+            print('Найдено несколько таких учеников. Уточните ФИО.')
+        except Schoolkid.DoesNotExist:
+            print('Такой ученик не найден. Попробуйте еще раз.')
 
-print('Исправляем оценки...')
-fix_marks(schoolkid)
-print('Оценки исправлены.')
+    print('Исправляем оценки...')
+    fix_marks(schoolkid)
+    print('Оценки исправлены.')
 
-print('Удаляем замечания...')
-remove_chastisements(schoolkid)
-print('Замечания удалены.')
+    print('Удаляем замечания...')
+    remove_chastisements(schoolkid)
+    print('Замечания удалены.')
 
-while True:
-    try:
-        subject_title = input('Введите название предмета для создания похвалы(с большой буквы): ')
-        create_commendation(schoolkid, subject_title)
-        print('Похвала создана.')
-        break
-    except EmptyQuerySet:
-        print('Не найдено нужных уроков. Попробуйте еще раз.')
+    while True:
+        try:
+            subject_title = input('Введите название предмета для создания похвалы(с большой буквы): ')
+            create_commendation(schoolkid, subject_title)
+            print('Похвала создана.')
+            break
+        except EmptyQuerySet:
+            print('Не найдено нужных уроков. Попробуйте еще раз.')
 
-print('Все готово!')
+    print('Все готово!')
+
+
+if __name__ == '__main__':
+    main()
+    

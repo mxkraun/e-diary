@@ -16,7 +16,8 @@ Python3 должен быть уже установлен.
 $ python manage.py shell
 ```
 ```bash
->>> import scripts.py
+>>> import scripts
+>>> scripts.main()
 ```
 
 Следуйте инструкции в терминале. 
