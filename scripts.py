@@ -3,6 +3,13 @@ import random
 from datetime import datetime
 
 
+COMMENDATION_PHRASES = (
+        'Очень хороший ответ!', 'Талантливо!', 'Уже существенно лучше!',
+        'Ты на верном пути!', 'С каждым разом у тебя получается всё лучше!',
+        'Я вижу, как ты стараешься!', 'Ты растешь над собой!'
+        )
+
+
 def fix_marks(schoolkid):
     Mark.objects.filter(schoolkid=schoolkid, points__in=[2,3]).update(points=5)
 
@@ -12,12 +19,7 @@ def remove_chastisements(schoolkid):
     chastisements.delete()
 
 
-def create_commendation(schoolkid, subject_title):
-    commendation_phrases = (
-        'Очень хороший ответ!', 'Талантливо!', 'Уже существенно лучше!',
-        'Ты на верном пути!', 'С каждым разом у тебя получается всё лучше!',
-        'Я вижу, как ты стараешься!', 'Ты растешь над собой!'
-        )
+def create_commendation(schoolkid, subject_title): 
     group_letter = schoolkid.group_letter
     year_of_study = schoolkid.year_of_study
     while True:
@@ -48,7 +50,7 @@ def create_commendation(schoolkid, subject_title):
     else: 
         raise Lesson.DoesNotExist('Lesson matching query does not exist.')
     Commendation.objects.create(
-        text=random.choice(commendation_phrases), created=lesson.date,schoolkid=schoolkid,
+        text=random.choice(COMMENDATION_PHRASES), created=lesson.date,schoolkid=schoolkid,
         subject=lesson.subject, teacher=lesson.teacher
         )
 
